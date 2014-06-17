@@ -1,0 +1,11 @@
+div.col-md-4
+    table.table.table-stripped.table-condensed
+      thead
+        tr
+          td Jugador
+          td Aposta
+      tbody
+        each bet, idx in Bets
+          tr 
+            td #{bet.user.profile.name}
+            td #{bet.resultHome} - #{bet.resultAway}

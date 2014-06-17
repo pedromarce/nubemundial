@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  h1 Current Games
+  div.col-md-4
+    form(action='/betGames', method='POST')
+      button.btn.btn-default(type='submit', onclick='submit(); return false;')
+        label JUGAR  APOSTA
+      input(type='hidden', name='_csrf', value=_csrf)
+      table.table.table-striped.table-condensed
+        tbody
+          each game, idx in Games
+            tr(onclick="$.get('/game/bets', {gameId: #{game.id}}, function(result) {$('#bets').html(result);})")
+              input(type='hidden', name='bets[#{idx}][id]', value=game.id)
+              td #{game.teamHome.teamName} 
+              if game.closeTime <= Date.now()
+                td #{game.resultHome} 
+              else
+                td   
+                  if user
+                    select(name="bets[#{idx}][home]")
+                      for i in [,0,1,2,3,4,5,6,7,8,9,10]
+                        option(value=i,selected=(i==Bets[idx].home))= i
+              td -
+              if game.closeTime <= Date.now()
+                td #{game.resultAway} 
+              else
+                td   
+                  if user
+                    select(name="bets[#{idx}][away]")
+                      for i in [,0,1,2,3,4,5,6,7,8,9,10]
+                        option(value=i,selected=(i==Bets[idx].away))= i
+              td #{game.teamAway.teamName}
+
+  div.col-md-4(id="bets")
+
+  div.col-md-4
+    table.table.table-stripped.table-condensed
+      thead
+        tr
+          td Jugador
+          td Punts
+      tbody
+        each user, idx in Users
+          tr 
+            td #{user.profile.name}
+            td Punts
